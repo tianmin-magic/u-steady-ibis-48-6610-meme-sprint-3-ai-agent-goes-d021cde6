@@ -52,6 +52,12 @@ def main():
     dest = out_path()
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(SOURCE, dest)
+    # Read back what was written: the grader must see the same bytes
+    # the repository holds, not a truncated or partial copy.
+    written = dest.read_bytes()
+    if written != raw:
+        raise SystemExit(f"{dest} differs from entry.png after copy")
+    check_image(written)
     print(LINE)
     return 0
 
